@@ -48,6 +48,8 @@ public class MainController {
 		return mav;
 	}
 
+	// checks to see if a User exists in the database. If they do, set that user from db as session attribute and redirect to homepage
+	//. else, errormessage.
 	@RequestMapping(value = "loginProcess", method = RequestMethod.POST)
 	public String loginHandlerTesting(@RequestParam("username") String username, @RequestParam("userPassword") String userPassword, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();

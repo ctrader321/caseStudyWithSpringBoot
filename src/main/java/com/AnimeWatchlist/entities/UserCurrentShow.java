@@ -36,7 +36,7 @@ public class UserCurrentShow {
 		this.showName = showName;
 		this.totalEpisodes = totalEpisodes;
 		this.currentEpisode = currentEpisode;
-		this.completionPercentage = Double.parseDouble(df.format(100*((double)currentEpisode/(double)totalEpisodes)));
+		this.completionPercentage = Double.parseDouble(df.format(100*((double)(currentEpisode/totalEpisodes))));
 	}
 
 	public String getUsername() {

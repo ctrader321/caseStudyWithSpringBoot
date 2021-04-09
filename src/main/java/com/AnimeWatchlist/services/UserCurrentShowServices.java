@@ -35,10 +35,10 @@ public class UserCurrentShowServices {
 		return ucsr.save(userCurrentShow);
 	}
 	
-	public void updateShowCurrentEpisode(String username, String showName, int currentEpisode) {
+	public UserCurrentShow updateShowCurrentEpisode(String username, String showName, int currentEpisode) {
 		UserCurrentShow showToUpdate = ucsr.getUserCurrentShowByUsernameAndShowName(username, showName);
 		showToUpdate.setCurrentEpisode(currentEpisode);
-		ucsr.save(showToUpdate);
+		return ucsr.save(showToUpdate);
 	}
 	
 	public List<UserCurrentShow> getAllUserCurrentShowByUsername(String username){

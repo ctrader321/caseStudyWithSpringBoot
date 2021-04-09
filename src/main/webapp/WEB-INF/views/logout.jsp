@@ -12,7 +12,7 @@ html, body {
 <title>Logging Out!</title>
 <%@include file="headCommonEnd.jsp"%>
 	<script type="text/JavaScript">
-	setTimeout("location.href='http://localhost:8080/WatchlistAndTracker/login';", 4000);
+	setTimeout("location.href='http://localhost:8080/';", 4000);
 	</script>
 
 	<div class="container">

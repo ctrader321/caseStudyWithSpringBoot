@@ -14,8 +14,8 @@ public class ShowServices {
 	@Autowired
 	ShowRepository sr;
 	
-	public void addShow(Show show) {
-		sr.save(show);
+	public Show addShow(Show show) {
+		return sr.save(show);
 	}
 	
 	public Show getShow(String showname) {
