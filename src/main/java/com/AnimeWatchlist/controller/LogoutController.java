@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LogoutController {
 
+	// Sends user to /logout and invalidates session
 	@RequestMapping(value="/logout", method = RequestMethod.GET)
 	public ModelAndView logout(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("logout");

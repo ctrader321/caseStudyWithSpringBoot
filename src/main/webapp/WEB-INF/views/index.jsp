@@ -112,6 +112,7 @@ html, body {
 						</script>
 					<input type="submit" name="addShowToForm" value="Add" style="width:40%">
 					<p style="color:red">${showAlreadyInDb}</p>
+					<p style="color:green">${showAddedSuccess}</p>
 				</form>
 			</div>
 		</div>

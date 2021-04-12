@@ -22,10 +22,12 @@ public class UserCurrentShowServices {
 	@Autowired
 	ShowServices shs;
 		
+	// Saves a UserCurrentShow entity to Database
 	public UserCurrentShow saveUserCurrentShow(UserCurrentShow currentShow) {
 		return ucsr.save(currentShow);
 	}
 	
+	// Queries Db for a UserCurrentShow by username and showName
 	public UserCurrentShow getUserCurrentShow(String username, String showName) {
 		return ucsr.getUserCurrentShowByUsernameAndShowName(username, showName);
 	}
@@ -35,16 +37,19 @@ public class UserCurrentShowServices {
 		return ucsr.save(userCurrentShow);
 	}
 	
+	// Queries Db for UserCurrentShow and sets their current episode, repersists the entity afterward with update.
 	public UserCurrentShow updateShowCurrentEpisode(String username, String showName, int currentEpisode) {
 		UserCurrentShow showToUpdate = ucsr.getUserCurrentShowByUsernameAndShowName(username, showName);
 		showToUpdate.setCurrentEpisode(currentEpisode);
 		return ucsr.save(showToUpdate);
 	}
 	
+	// Queries Db for a list of UserCurrentShow entities by username.
 	public List<UserCurrentShow> getAllUserCurrentShowByUsername(String username){
 		return ucsr.findAllByUsernameOrderByCompletionPercentageAscTotalEpisodesDesc(username);
 		
 	}
+	
 	
 	@Transactional
 	public void removeUserCurrentShowByUser(String username, String showName) {

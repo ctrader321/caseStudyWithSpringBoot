@@ -148,7 +148,7 @@ html, body {
 									<c:out value="${i.getTotalEpisodes()}"></c:out>
 								</td>
 								<td width = "10%" class="tg-brdm">
-									<c:if test="${i.getCompletionPercentage() >= 100 }">Completed</c:if>
+									<c:if test="${i.getCompletionPercentage() >= 100 }"><span style="color:blue; padding:0%;"><strong>Completed</strong></span></c:if>
 									<c:if test="${i.getCompletionPercentage() < 100 }">${i.completionPercentage}</c:if>
 									</td>	
 							</tr>

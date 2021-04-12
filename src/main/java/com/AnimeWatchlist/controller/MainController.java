@@ -39,25 +39,17 @@ public class MainController {
 		return new ModelAndView("login");
 	}
 
-	@RequestMapping(value="/index", method=RequestMethod.GET)
-	public ModelAndView indexHandler(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("index");
-		User u = (User)request.getAttribute("user");
-		mav.addObject("user", u);
-		mav.addObject("allShowsInDb", shs.getAllShows());
-		return mav;
-	}
-
-	// checks to see if a User exists in the database. If they do, set that user from db as session attribute and redirect to homepage
-	//. else, errormessage.
+	// Calls validate user method from UserServices to check form inputs.
 	@RequestMapping(value = "loginProcess", method = RequestMethod.POST)
 	public String loginHandlerTesting(@RequestParam("username") String username, @RequestParam("userPassword") String userPassword, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+		// if user has entered correct user info, sets user session attribute and brings them to the home page.
 		if (us.validateUser(username, userPassword) != null) {
 			User user = us.getUser(username);
 			request.getSession().setAttribute("user", user);
 			mav.addObject("user", user);
 			return "redirect:/index";
+		// if user enters incorrect info, they stay on login page with a message popup.
 		} else {
 			request.setAttribute("message", "Unknown username/password. Please try again. Click Create an Account below if this is your first visit :");
 			request.getRequestDispatcher("/");
@@ -66,16 +58,29 @@ public class MainController {
 		return "/login";
 	}
 	
+	@RequestMapping(value="/index", method=RequestMethod.GET)
+	public ModelAndView indexHandler(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("index");
+		User u = (User)request.getAttribute("user");
+		mav.addObject("user", u);
+		mav.addObject("allShowsInDb", shs.getAllShows());
+		return mav;
+	}
+	
+	// When user adds a show to "our collection" from the homepage
 	@RequestMapping(value="addShowToDb", method = RequestMethod.POST)
 	public ModelAndView addNewShowToTable(@ModelAttribute("Show") Show show, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+		// Check to see if user session attribute is available, else return user to login message and display message.
 		if((User)request.getSession().getAttribute("user") !=null ) {
-			
+		// if it already exists, reload homepage for user and display this message
 			if(shs.getShow(show.getShowName()) != null) {
 				request.setAttribute("showAlreadyInDb", "We already have a record of that show! Please try adding something else!");
 				return indexHandler(request);
+			// if it doesn't exist, add the show and display message.
 			} else {
 				shs.addShow(show);
+				request.setAttribute("showAddedSuccess", "You've Successfully added a show to our Collection!");
 			}
 			
 		} else {

@@ -32,6 +32,7 @@ public class ListController {
 	@Autowired
 	UserCurrentShowServices ucss;
 	
+	
 	@RequestMapping(value="/currentWatchlist", method=RequestMethod.GET)
 	public ModelAndView currentHandler(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("currentWatchlist");
@@ -49,16 +50,20 @@ public class ListController {
 		return mav;
 	}
 	
+	// Method takes form data and on submit will attempt to add the show to the user's current watchlist
 	@RequestMapping(value="addToCurrent", method = RequestMethod.GET)
 	public ModelAndView userAddShowToCurrent(@ModelAttribute("showAdd") Show show,@RequestParam("episodeToSet") Integer currentEpisode, HttpServletRequest request){
 		User z = (User)request.getSession().getAttribute("user");
 		User u = us.getUser(z.getUsername());
+		// if its already in their list, show message.
 		if(u.getCurrentShowList().contains(shs.getShow(show.getShowName()))) {
 			request.setAttribute("alreadyInList", "You've already added that to your Current Watchlist! Try updating your current episode below!");
 			return currentHandler(request);
+		// Check if it's in backlog for that user, if it is, remove it.
 		}else if(u.getBacklogShowList().contains(shs.getShow(show.getShowName()))) {
 			u.getBacklogShowList().remove(shs.getShow(show.getShowName()));
 			us.addUser(u);
+		// if it's not in currentshowlist, add show and make new UserCurrentShow entity for user and show. 
 		} else if(!u.getCurrentShowList().contains(shs.getShow(show.getShowName()))){
 			u.getCurrentShowList().add(shs.getShow(show.getShowName()));
 			us.addUser(u);
@@ -69,6 +74,7 @@ public class ListController {
 		return currentHandler(request);
 	}
 	
+	// takes second form data and will edit a UserCurrentShow's episode and update the completion percentage.
 	@RequestMapping(value="editInCurrent", method = RequestMethod.GET)
 	public ModelAndView userEditShowInCurrent(@ModelAttribute("showEdit") Show show,@RequestParam("episodeNumberToSet") Integer currentEpisode, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("currentWatchlist");
@@ -87,6 +93,7 @@ public class ListController {
 		return currentHandler(request);
 	}
 	
+	// takes third form's data which is just show name. Queries for it removes the show from User's current list, also removes UserCurrentShow entity for that user and show.
 	@RequestMapping(value="removeFromCurrent", method = RequestMethod.GET)
 	public ModelAndView userRemoveShowInCurrent(@ModelAttribute("showRemove") Show show, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("currentWatchlist");
@@ -118,17 +125,21 @@ public class ListController {
 		return mav;
 	}
 	
+	// takes first form's data and adds the show to the user's backlog list.
 	@RequestMapping(value="addToBacklog", method = RequestMethod.POST)
 	public ModelAndView userAddShowToBacklog(@ModelAttribute("showAdd") Show show, HttpServletRequest request){
 		if((User)request.getSession().getAttribute("user") != null) {
 			User z = (User)request.getSession().getAttribute("user");
 			User u = us.getUser(z.getUsername());
+			// Checks if show is already in list, display this message to the user.
 			if(u.getBacklogShowList().contains(shs.getShow(show.getShowName()))){
 				request.setAttribute("backlogAlreadyAdded", "You've already added that to your Backlog Watchlist!");
 				return backlogHandler(request);
+			// Checks if show is already in currentlist, display message to user.
 			}else if (u.getCurrentShowList().contains(shs.getShow(show.getShowName()))){
 				request.setAttribute("alreadyInCurrent", "That show is already in your current watchlist! Head over to your Current Watchlist if you wish to see.");
 				return backlogHandler(request);
+			// adds show to user's backlog list.
 			}else {
 				u.getBacklogShowList().add(shs.getShow(show.getShowName()));
 				us.addUser(u);
@@ -138,6 +149,7 @@ public class ListController {
 		return backlogHandler(request);	
 	}
 	
+	// removes specified show from user's backlog list
 	@RequestMapping(value="removeFromBacklog", method = RequestMethod.POST)
 	public ModelAndView userRemoveShowFromBacklog(@ModelAttribute("showRemove") Show show, HttpServletRequest request){
 		User z = (User)request.getSession().getAttribute("user");
@@ -147,10 +159,12 @@ public class ListController {
 		return backlogHandler(request);
 	}
 	
+	// Moves specified show from user's backlog to current.
 	@RequestMapping(value="moveFromBackToCurrent", method = RequestMethod.POST)
 	public ModelAndView userMoveFromBacklogToCurrent(@ModelAttribute("showMove") Show show, HttpServletRequest request, HttpServletResponse response) {
 		User z = (User)request.getSession().getAttribute("user");
 		User u = us.getUser(z.getUsername());
+		// Check if show is already in current list, if its not, remove from backlog 
 		if(!u.getCurrentShowList().contains(shs.getShow(show.getShowName()))) {
 			u.getBacklogShowList().remove(shs.getShow(show.getShowName()));
 			u.getCurrentShowList().add(shs.getShow(show.getShowName()));
